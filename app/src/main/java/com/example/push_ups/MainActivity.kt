@@ -49,16 +49,25 @@ class MainActivity : AppCompatActivity() {
             Push_Count.text = "${push_Count}"
             Start_Button.text = "시작"
         }
+
+        Push_Count.setOnClickListener { view ->
+            if(playing == true){
+                listener!!.counting_button()
+            }
+        }
     }
 
     inner class SensorListener : SensorEventListener {
+
+        var push_det = false
         override fun onSensorChanged(event: SensorEvent?) {
             if(event?.sensor?.type == Sensor.TYPE_PROXIMITY){
                 //textView.text = "물체와의 거리: ${event?.values[0]} cm"
 
-                push_Count ++;
-                if(push_Count % 2 == 0) {
-                    Push_Count.text = "${push_Count / 2}"
+                push_det = !push_det
+                if(push_det == true) {
+                    push_Count++
+                    Push_Count.text = "${push_Count}"
                 }
             }
         }
@@ -66,6 +75,11 @@ class MainActivity : AppCompatActivity() {
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
 
+        }
+
+        fun counting_button(){
+            push_Count++
+            Push_Count.text = "${push_Count}"
         }
     }
 }
