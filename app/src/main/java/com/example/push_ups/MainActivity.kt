@@ -54,9 +54,7 @@ class MainActivity : AppCompatActivity() {
     inner class SensorListener : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
             if(event?.sensor?.type == Sensor.TYPE_PROXIMITY){
-                //textView.text = "물체와의 거리: ${event?.values[0]} cm"
-
-                push_Count ++;
+                push_Count ++
                 if(push_Count % 2 == 0) {
                     Push_Count.text = "${push_Count / 2}"
                 }
