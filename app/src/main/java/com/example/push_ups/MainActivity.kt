@@ -7,8 +7,11 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+
 import androidx.appcompat.app.AppCompatActivity
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.startActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     var playing = false
 
     var push_Count = 0
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +53,24 @@ class MainActivity : AppCompatActivity() {
             push_Count = 0;
             Push_Count.text = "${push_Count}"
             Start_Button.text = "시작"
+        }
+        Result_Button.setOnClickListener {
+
+            Realm.init(this)
+
+            Realm.getDefaultInstance().use { realm ->
+                realm.executeTransaction {
+
+                    val member = Member()
+                    member.id = 1
+                    member.name = "Tom"
+                    member.age = 25
+
+                    realm.copyToRealm(member)
+                }
+            }
+
+            startActivity<Main2_Act>()
         }
     }
 
