@@ -30,6 +30,8 @@ class Main2_Act : AppCompatActivity() {
         val entries = ArrayList<BarEntry>()
         val labels = ArrayList<String>()
         var barDataSet: BarDataSet
+
+
         realm.where(Member::class.java).findAll().forEach {
 
             entries.add(BarEntry(it.cnt.toFloat(), num++))
