@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onPause() {
         super.onPause()
