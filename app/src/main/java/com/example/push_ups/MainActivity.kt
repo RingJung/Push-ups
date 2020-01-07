@@ -51,10 +51,33 @@ class MainActivity : AppCompatActivity() {
             }
         }
         Reset_Button.setOnClickListener { view ->
-            manager?.unregisterListener(listener)
-            push_Count = 0;
-            Push_Count.text = "${push_Count}"
-            Start_Button.text = "시작"
+            if(push_Count != 0) {
+                val onlyDate = System.currentTimeMillis()
+                Realm.init(this)
+
+                Log.d("date", onlyDate.toString())
+
+                Realm.getDefaultInstance().use { realm ->
+
+                    realm.executeTransaction {
+
+                        val member = Member()
+                        member.id = onlyDate.toString()
+                        Log.d("data_realm", member.id)
+                        member.cnt = push_Count.toInt()
+                        Log.d("data_realm", member.id)
+
+                        realm.copyToRealm(member)
+                    }
+
+                }
+
+                manager?.unregisterListener(listener)
+                push_Count = 0;
+                Push_Count.text = "${push_Count}"
+                Start_Button.text = "시작"
+
+            }
         }
 
         Push_Count.setOnClickListener { view ->
@@ -90,32 +113,6 @@ class MainActivity : AppCompatActivity() {
         fun counting_button() {
             push_Count++
             Push_Count.text = "${push_Count}"
-        }
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onPause() {
-        super.onPause()
-
-        val onlyDate: LocalDateTime = LocalDateTime.now()
-        Realm.init(this)
-
-        Log.d("date", onlyDate.toString())
-
-        Realm.getDefaultInstance().use { realm ->
-
-            realm.executeTransaction {
-
-                val member = Member()
-                member.id = onlyDate.toString()
-                Log.d("data_realm",member.id)
-                member.cnt = push_Count.toInt()
-                Log.d("data_realm",member.id)
-
-                realm.copyToRealm(member)
-            }
-
         }
     }
 }

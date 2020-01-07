@@ -37,11 +37,11 @@ class Main2_Act : AppCompatActivity() {
 
             labels.add(it.id)
         }
-        barDataSet = BarDataSet(entries, "Cells")
+        barDataSet = BarDataSet(entries, "푸쉬업 횟수")
         val data = BarData(labels, barDataSet)
         barChart.data = data // set the data and list of lables into chart
 
-        barChart.setDescription("Set Bar Chart Description")  // set the description
+        barChart.setDescription("시간별 푸시업 수")  // set the description
 
         //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
         barDataSet.color = resources.getColor(R.color.colorAccent)
