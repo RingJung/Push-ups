@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_signin.*
 
 class Signup : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
@@ -15,6 +16,10 @@ class Signup : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
+
+        SignUp_Btn.setOnClickListener {
+            createUserId(Id_EditText.text.toString(), Pswd_EditText.text.toString())
+        }
 
         auth = FirebaseAuth.getInstance()
 

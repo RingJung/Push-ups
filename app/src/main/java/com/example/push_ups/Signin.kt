@@ -3,19 +3,40 @@ package com.example.push_ups
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_signin.*
+import org.jetbrains.anko.startActivity
 
 class Signin : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var authListener: FirebaseAuth.AuthStateListener //리스너 선언
-
+    lateinit var googleSigneInClient : GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup)
+        setContentView(R.layout.activity_signin)
 
 
+        SignUp_Btn.setOnClickListener {
+            startActivity<Signup>()
+        }
+
+        SignIn_Btn.setOnClickListener {
+            loginUserId(Id_EditText.text.toString(), Pswd_EditText.text.toString())
+        }
+
+        // Configure Google Sign In
+        //GoogleSignInOptions 옵션을 관리해주는 클래스로 API 키값과 요청할 값이 저장되어 있다.
+        var gso= GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build();
+
+        googleSigneInClient= GoogleSignIn.getClient(this,gso)
         auth = FirebaseAuth.getInstance()
 
         //리스너 초기화
@@ -27,6 +48,12 @@ class Signin : AppCompatActivity() {
                 //로그아웃 또는 로그인이 안 되었을 때 발생하는 이벤트
             }
         }
+
+    }
+
+    private fun signIn(){
+        val signInIntent = googleSigneInClient.signInIntent
+        startActivityForResult(signInIntent,100)
     }
 
     override fun onStart() {
@@ -61,21 +88,16 @@ class Signin : AppCompatActivity() {
                 if(it.isSuccessful){
                     Toast.makeText(this, "로그인 성공",Toast.LENGTH_SHORT).show()
                     //로그인 성공시 이벤트발생
+                    startActivity<MainActivity>()
                 }else{
                     Toast.makeText(this, "로그인 실패",Toast.LENGTH_SHORT).show()
                     //로그인 실패시 이벤트 발생
+                    Pswd_EditText.setText("")
                 }
             }
     }
 
-    private fun verifyEmail(){
-        auth?.currentUser?.sendEmailVerification()
-            ?.addOnCompleteListener(this){
-                if(it.isSuccessful){
 
-                }
-            }
-    }
     private fun updatePassword(newPassword: String) {
         auth?.currentUser?.updatePassword(newPassword)
             ?.addOnCompleteListener(this) {
